@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = 'martin.gonzalez@etermax.com'
 
   spec.summary       = 'extracts a universal apk from an .aab file'
-  spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-bundletool"
+  spec.homepage      = "https://github.com/MartinGonzalez/fastlane-plugin-bundletool"
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)

@@ -28,7 +28,7 @@ module Fastlane
 
       def self.validate_aab!(aab_path)
         puts_message('Checking if .aab file exists...')
-        puts_error!(".aab file at #{aab_path} does not exist", StandardError.new("File at #{aab_path} could not be found")) unless File.file?(aab_path)
+        puts_error!(".aab file at #{aab_path} does not exist") unless File.file?(aab_path)
         puts_success('Checking if .aab file exists')
       end
 
@@ -43,7 +43,7 @@ module Fastlane
           end
           puts_success('Downloading bundletool')
         rescue StandardError => e
-          puts_error!("Something went wrong when downloading bundletool version #{version}", e)
+          puts_error!("Something went wrong when downloading bundletool version #{version}")
         end
       end
 
@@ -54,7 +54,7 @@ module Fastlane
           output_path = run_bundletool!(aab_absolute_path, keystore_info)
           prepare_apk!(output_path, apk_output_absolute_path)
         rescue StandardError => e
-          puts_error!("Bundletool could not extract universal apk from aab at #{aab_absolute_path}", e)
+          puts_error!("Bundletool could not extract universal apk from aab at #{aab_absolute_path}")
         ensure
           clean_temp!
         end
@@ -124,8 +124,8 @@ module Fastlane
         UI.important "#{message} #{Fastlane::Helper::Emojis.warning}" if @verbose
       end
 
-      def self.puts_error!(message, error)
-        UI.user_error! "#{message} #{Fastlane::Helper::Emojis.red_cross}\n\n#{error}"
+      def self.puts_error!(message)
+        UI.user_error! message
       end
 
       def self.available_options
@@ -179,7 +179,7 @@ module Fastlane
       end
 
       def self.print_params(options)
-        table_title = "Params for bundletool #{Fastlane::EtermaxBuilds::VERSION}"
+        table_title = "Params for bundletool #{Fastlane::Bundletool::VERSION}"
         FastlaneCore::PrintTable.print_values(config: options,
                                               mask_keys: [:ks_password, :ks_key_alias_password],
                                               title: table_title)
@@ -196,7 +196,7 @@ module Fastlane
       def self.details
         "Using the google oficial bundletool to extract an universal apk from .aab file to distribute it"
       end
-      
+
       def self.is_supported?(platform)
         [:android].include?(platform)
       end
