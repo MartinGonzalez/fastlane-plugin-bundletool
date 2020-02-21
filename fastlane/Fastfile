@@ -3,6 +3,6 @@ lane :bundletool_test do
     verbose: true,
     bundletool_version: '0.11.0',
     aab_path: 'resources/example.aab',
-    apk_output_path: 'resources/example.apk'
+    apk_output_path: "resources/bundletool_temp/universal_apk/myapk.apk"
   )
 end

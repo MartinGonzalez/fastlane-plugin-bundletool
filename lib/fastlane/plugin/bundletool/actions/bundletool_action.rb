@@ -43,7 +43,7 @@ module Fastlane
           end
           puts_success('Downloading bundletool')
         rescue StandardError => e
-          puts_error!("Something went wrong when downloading bundletool version #{version}")
+          puts_error!("Something went wrong when downloading bundletool version #{version}. \nError message\n #{e.message}")      
         end
       end
 
@@ -53,8 +53,8 @@ module Fastlane
           apk_output_absolute_path = Pathname.new(File.expand_path(apk_output_path)).to_s
           output_path = run_bundletool!(aab_absolute_path, keystore_info)
           prepare_apk!(output_path, apk_output_absolute_path)
-        rescue StandardError => e
-          puts_error!("Bundletool could not extract universal apk from aab at #{aab_absolute_path}")
+        rescue StandardError => e          
+          puts_error!("Bundletool could not extract universal apk from aab at #{aab_absolute_path}. \nError message\n #{e.message}")          
         ensure
           clean_temp!
         end
@@ -91,8 +91,8 @@ module Fastlane
         puts_important("Apk at path #{target_path} exists. Replacing it.") if File.file?(target_path)
         target_dir_name = File.dirname(target_path)
         unless Dir.exist?(target_dir_name)
-          puts_important("Creating path #{target_path} since does not exist")
-          Dir.mkdir target_dir_name
+          puts_important("Creating path #{target_dir_name} since does not exist")
+          FileUtils.mkdir_p target_dir_name
         end
         cmd = "mv #{output_path} #{@bundletool_temp_path}/output.zip &&
         unzip #{@bundletool_temp_path}/output.zip -d #{@bundletool_temp_path} &&
