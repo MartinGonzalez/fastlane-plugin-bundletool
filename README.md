@@ -1,4 +1,4 @@
-# bundletool plugin
+# Bundletool for Fastlane
 
 [![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-bundletool)
 
@@ -10,30 +10,38 @@ This project is a [_fastlane_](https://github.com/fastlane/fastlane) plugin. To 
 fastlane add_plugin bundletool
 ```
 
+or in your Pluginfile under fastlane folder write the following line and run `bundle install`.
+
+```
+gem 'fastlane-plugin-bundletool', '1.0.1'
+```
+
 ## About bundletool
 
-Extracts a universal apk from an .aab file
+**bundletool** is the underlying tool that Gradle, Android Studio, and Google Play use to build an Android App Bundle or convert an app bundle into the various APKs that are deployed to devices. bundletool is also available to you as a command line tool, so you can recreate, inspect, and verify Google Play’s server-side build of your app’s APKs.
 
-**Note to author:** Add a more detailed description about this plugin here. If your plugin contains multiple actions, make sure to mention them here.
+https://developer.android.com/studio/command-line/bundletool
 
-## Example
+The motivation of this plugin is to extract an universal `.apk` file from an [.aab](https://fileinfo.com/extension/aab) file. Since we cannot distribute aab files, it's great that we can extract from the very same binary a file that we can distribute internally.
 
-Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
+## Usage
 
-**Note to author:** Please set up a sample project to make it easy for users to explore what your plugin does. Provide everything that is necessary to try out the plugin in this project (including a sample Xcode/Android project if necessary)
+In your Fastfile you need to use `bundletool` action. After you build the `.aab` file you can run the following code.
 
-## Run tests for this plugin
-
-To run both the tests, and code style validation, run
-
+```ruby
+bundletool(
+  ks_path: keystore_path,
+  ks_password: keystore_password,
+  ks_key_alias: keystore_alias,
+  ks_key_alias_password: keystore_alias_password,
+  bundletool_version: '0.11.0',
+  aab_path: aab_path,
+  apk_output_path: apk_output_path,
+  verbose: true
+)
 ```
-rake
-```
 
-To automatically fix many of the styling issues, use
-```
-rubocop -a
-```
+This will output the universal `.apk` in the output path you set.
 
 ## Issues and Feedback
 
