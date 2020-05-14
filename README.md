@@ -43,6 +43,12 @@ bundletool(
 
 This will output the universal `.apk` in the output path you set.
 
+## Use case
+
+Here you can find a post I did explaining why I have to create this action.
+
+https://medium.com/@gonzalez.martin90/bundletool-with-fastlane-8f8862ab16e0
+
 ## Issues and Feedback
 
 For any other issues and feedback about this plugin, please submit it to this repository.
