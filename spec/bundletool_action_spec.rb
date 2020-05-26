@@ -35,4 +35,17 @@ describe 'BundletoolAction.run should' do
                                             aab_path: invalid_path,
                                             apk_output_path: '/resources/example.apk')
   end
+  
+  it 'works when .abb file path contains spaces' do
+    Dir.mktmpdir("foo bar") do |path_with_spaces|
+      FileUtils.cp('./resources/example.aab', path_with_spaces+'/example.aab')
+
+      Fastlane::Actions::BundletoolAction.run(verbose: true,
+                                              bundletool_version: '0.11.0',
+                                              aab_path: path_with_spaces+'/example.aab',
+                                              apk_output_path: path_with_spaces+'/example.apk')
+                                              
+      expect(File.exists? path_with_spaces+'/example.apk').to eq(true)
+    end
+  end
 end

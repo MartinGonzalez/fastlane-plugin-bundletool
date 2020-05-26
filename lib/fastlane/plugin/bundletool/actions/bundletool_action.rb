@@ -71,10 +71,10 @@ module Fastlane
         keystore_params = ''
 
         unless keystore_info.empty?
-          keystore_params = "--ks=#{keystore_info[:keystore_path]} --ks-pass=pass:#{keystore_info[:keystore_password]} --ks-key-alias=#{keystore_info[:alias]} --key-pass=pass:#{keystore_info[:alias_password]}"
+          keystore_params = "--ks=\"#{keystore_info[:keystore_path]}\" --ks-pass=pass:#{keystore_info[:keystore_password]} --ks-key-alias=#{keystore_info[:alias]} --key-pass=pass:#{keystore_info[:alias_password]}"
         end
 
-        cmd = "java -jar #{@bundletool_temp_path}/bundletool.jar build-apks --bundle=#{aab_path} --output=#{output_path} --mode=universal #{keystore_params}"
+        cmd = "java -jar #{@bundletool_temp_path}/bundletool.jar build-apks --bundle=\"#{aab_path}\" --output=\"#{output_path}\" --mode=universal #{keystore_params}"
 
         Open3.popen3(cmd) do |_, _, stderr, wait_thr|
           exit_status = wait_thr.value
@@ -94,9 +94,9 @@ module Fastlane
           puts_important("Creating path #{target_dir_name} since does not exist")
           FileUtils.mkdir_p target_dir_name
         end
-        cmd = "mv #{output_path} #{@bundletool_temp_path}/output.zip &&
-        unzip #{@bundletool_temp_path}/output.zip -d #{@bundletool_temp_path} &&
-        mv #{@bundletool_temp_path}/universal.apk #{target_path}"
+        cmd = "mv \"#{output_path}\" \"#{@bundletool_temp_path}/output.zip\" &&
+        unzip \"#{@bundletool_temp_path}/output.zip\" -d \"#{@bundletool_temp_path}\" &&
+        mv \"#{@bundletool_temp_path}/universal.apk\" \"#{target_path}\""
         Open3.popen3(cmd) do |_, _, stderr, wait_thr|
           exit_status = wait_thr.value
           raise stderr.read unless exit_status.success?
