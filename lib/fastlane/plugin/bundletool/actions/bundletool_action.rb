@@ -71,7 +71,7 @@ module Fastlane
         keystore_params = ''
 
         unless keystore_info.empty?
-          keystore_params = "--ks=\"#{keystore_info[:keystore_path]}\" --ks-pass=\"pass:#{keystore_info[:keystore_password]}\" --ks-key-alias=\"#{keystore_info[:alias]}\" --key-pass=\"pass:#{keystore_info[:alias_password]}\""
+          keystore_params = "--ks=\"#{keystore_info[:keystore_path]}\" \"--ks-pass=pass:#{keystore_info[:keystore_password]}\" \"--ks-key-alias=#{keystore_info[:alias]}\" \"--key-pass=pass:#{keystore_info[:alias_password]}\""
         end
 
         cmd = "java -jar #{@bundletool_temp_path}/bundletool.jar build-apks --bundle=\"#{aab_path}\" --output=\"#{output_path}\" --mode=universal #{keystore_params}"
