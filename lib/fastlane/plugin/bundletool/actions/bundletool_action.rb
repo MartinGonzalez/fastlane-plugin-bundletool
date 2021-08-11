@@ -42,7 +42,7 @@ module Fastlane
       def self.download_bundletool(version)
         puts_message("Downloading bundletool (#{version}) from https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar...")
         Dir.mkdir "#{@project_root}/bundletool_temp"        
-        Kernel.open("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar") do |bundletool|
+        URI.open("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar") do |bundletool|
           File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
             file.write(bundletool.read)
           end
