@@ -1,3 +1,8 @@
+## [1.0.4] - 2020-08-12
+
+### Fixed
+- Kernel.open replaced with URI.open to avoid ruby versions conflicts. Thanks to @TofiBashers
+
 ## [1.0.2] - 2020-05-26
 
 ### Fixed
