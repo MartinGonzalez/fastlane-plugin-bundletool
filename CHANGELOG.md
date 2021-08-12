@@ -1,7 +1,12 @@
-## [1.0.4] - 2020-08-12
+## [1.0.4] - 2021-08-12
 
 ### Fixed
 - Kernel.open replaced with URI.open to avoid ruby versions conflicts. Thanks to @TofiBashers
+
+## [1.0.3] - 2020-10-13
+
+### Fixed
+Escape keystore_info params passed to bundletool. Thanks to @pradel pull request
 
 ## [1.0.2] - 2020-05-26
 
