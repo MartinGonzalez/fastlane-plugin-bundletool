@@ -48,7 +48,7 @@ module Fastlane
           end
         end
         puts_success('Downloading bundletool')
-      rescue StandardError => e
+      rescue OpenURI::HTTPError => e
         clean_temp!
         puts_error!("Something went wrong when downloading bundletool version #{version}. \nError message\n #{e.message}")        
         false

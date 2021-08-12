@@ -14,19 +14,20 @@ describe 'BundletoolAction.run should' do
                                             bundletool_version: '0.11.0',
                                             aab_path: aab_path)
   end
+
   it 'throws error when downloading bundletool fails' do
     aab_path = 'path/example.aab'
     allow(File).to receive(:file?).with(aab_path).and_return(true)
-    bundletool_url = 'https://github.com/google/bundletool/releases/download/0.11.0/bundletool-all-0.11.0.jar'
-    allow(Kernel).to receive(:open).with(bundletool_url).and_raise(StandardError.new('error'))
+    bundletool_version = 'wrong-version'
 
-    expect(FastlaneCore::UI).to receive(:user_error!).with("Something went wrong when downloading bundletool version 0.11.0. \nError message\n error")
+    expect(FastlaneCore::UI).to receive(:user_error!).with("Something went wrong when downloading bundletool version #{bundletool_version}. \nError message\n 404 Not Found")
 
     Fastlane::Actions::BundletoolAction.run(verbose: true,
-                                            bundletool_version: '0.11.0',
+                                            bundletool_version: bundletool_version,
                                             aab_path: aab_path,
                                             apk_output_path: '/resources/example.apk')
   end
+
   it 'throws .aab file does not exist UI.user_error! when providing invalid .aab file path' do
     invalid_path = 'some_invalid_dir/example.aab'
     expect(FastlaneCore::UI).to receive(:user_error!).with('.aab file at some_invalid_dir/example.aab does not exist')
