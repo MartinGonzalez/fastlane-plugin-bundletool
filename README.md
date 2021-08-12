@@ -13,7 +13,7 @@ fastlane add_plugin bundletool
 or in your Pluginfile under fastlane folder write the following line and run `bundle install`.
 
 ```
-gem 'fastlane-plugin-bundletool', '1.0.2'
+gem 'fastlane-plugin-bundletool', '1.0.4'
 ```
 
 ## About bundletool
