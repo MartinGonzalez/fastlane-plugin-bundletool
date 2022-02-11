@@ -1,3 +1,6 @@
+## [1.0.5] - 2022-02-11
+- Use single quotes for bundletool parameters to avoid special characters conflict.
+
 ## [1.0.4] - 2021-08-12
 
 ### Fixed
