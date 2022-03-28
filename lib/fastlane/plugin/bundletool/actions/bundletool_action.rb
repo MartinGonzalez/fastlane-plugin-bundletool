@@ -19,13 +19,13 @@ module Fastlane
           keystore_info[:alias_password] = params[:ks_key_alias_password]
         end
 
-        bundletool_version = params[:bundletool_version]
+        bundletool_version = params[:downloadUrl]
         aab_path = params[:aab_path]
         output_path = params[:apk_output_path] || '.'
 
         return unless validate_aab!(aab_path)
 
-        return unless download_bundletool(bundletool_version)
+        return unless download_bundletool(downloadUrl)
 
         extract_universal_apk_from(aab_path, output_path, keystore_info)
       end
@@ -39,10 +39,10 @@ module Fastlane
         puts_success('Checking if .aab file exists')
       end
 
-      def self.download_bundletool(version)
-        puts_message("Downloading bundletool (#{version}) from https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar...")
-        Dir.mkdir "#{@project_root}/bundletool_temp"        
-        URI.open("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar") do |bundletool|
+      def self.download_bundletool(downloadUrl)
+        puts_message("Downloading bundletool from #{downloadUrl}")
+        Dir.mkdir "#{@project_root}/bundletool_temp"
+        URI.open(downloadUrl) do |bundletool|
           File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
             file.write(bundletool.read)
           end
@@ -50,7 +50,7 @@ module Fastlane
         puts_success('Downloading bundletool')
       rescue OpenURI::HTTPError => e
         clean_temp!
-        puts_error!("Something went wrong when downloading bundletool version #{version}. \nError message\n #{e.message}")        
+        puts_error!("Something went wrong when downloading bundletool from #{downloadUrl}. \nError message\n #{e.message}")
         false
       end
 
