@@ -19,13 +19,14 @@ module Fastlane
           keystore_info[:alias_password] = params[:ks_key_alias_password]
         end
 
-        bundletool_version = params[:downloadUrl]
+        bundletool_version = params[:version]
+        download_url = params[:download_url]
         aab_path = params[:aab_path]
         output_path = params[:apk_output_path] || '.'
 
         return unless validate_aab!(aab_path)
 
-        return unless download_bundletool(downloadUrl)
+        return unless download_bundletool(bundletool_version, download_url)
 
         extract_universal_apk_from(aab_path, output_path, keystore_info)
       end
@@ -39,18 +40,26 @@ module Fastlane
         puts_success('Checking if .aab file exists')
       end
 
-      def self.download_bundletool(downloadUrl)
-        puts_message("Downloading bundletool from #{downloadUrl}")
+      def self.download_bundletool(version, download_url)
         Dir.mkdir "#{@project_root}/bundletool_temp"
-        URI.open(downloadUrl) do |bundletool|
-          File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
-            file.write(bundletool.read)
-          end
+
+        if defined?(download_url)
+
+          puts_message("Downloading bundletool from #{download_url}")
+
+          URI.open(downloadUrl, &method(:saveBundleTool))
+
+        else
+          puts_message("Downloading bundletool (#{version}) from https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar...")
+
+          URI.open("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar", &method(:saveBundleTool))
+
         end
-        puts_success('Downloading bundletool')
+
+        puts_success('Downloaded bundletool')
       rescue OpenURI::HTTPError => e
         clean_temp!
-        puts_error!("Something went wrong when downloading bundletool from #{downloadUrl}. \nError message\n #{e.message}")
+        puts_error!("Something went wrong when downloading bundletool" + defined? download_url ? "from #{download_url}" : "version #{version}" + ". \nError message\n #{e.message}")
         false
       end
 
@@ -155,15 +164,19 @@ module Fastlane
                                        description: 'Version of bundletool to use, by default 0.11.0 will be used',
                                        is_string: true,
                                        default_value: '0.11.0'),
+          FastlaneCore::ConfigItem.new(key: :download_url,
+                                       description: 'Url to download bundletool from, should point to a jar file',
+                                       is_string: true,
+                                       optional: true),
           FastlaneCore::ConfigItem.new(key: :aab_path,
                                        description: 'Path where the aab file is',
                                        is_string: true,
                                        optional: false,
                                        verify_block: proc do |value|
-                                                       unless value && !value.empty?
-                                                         UI.user_error!('You must set aab_path.')
-                                                       end
-                                                     end),
+                                         unless value && !value.empty?
+                                           UI.user_error!('You must set aab_path.')
+                                         end
+                                       end),
           FastlaneCore::ConfigItem.new(key: :apk_output_path,
                                        description: 'Path where the apk file is going to be placed',
                                        is_string: true,
@@ -200,6 +213,14 @@ module Fastlane
 
       def self.is_supported?(platform)
         [:android].include?(platform)
+      end
+
+      private
+
+      def self.saveBundleTool(bundletool)
+        File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
+          file.write(bundletool.read)
+        end
       end
     end
   end
