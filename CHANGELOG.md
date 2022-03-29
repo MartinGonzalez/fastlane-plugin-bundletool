@@ -1,3 +1,6 @@
+## [1.0.6] - 2022-03-29
+- Adding a `download_url` option to point to a specific bundletool url. Thanks to @alienwizard
+
 ## [1.0.5] - 2022-02-11
 - Use single quotes for bundletool parameters to avoid special characters conflict.
 
