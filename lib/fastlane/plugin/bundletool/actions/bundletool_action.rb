@@ -43,20 +43,19 @@ module Fastlane
       def self.download_bundletool(version, download_url)
         Dir.mkdir "#{@project_root}/bundletool_temp"
 
-        if defined?(download_url)
+        unless download_url.nil?          
           puts_message("Downloading bundletool from #{download_url}")
           download_and_write_bundletool(download_url)
         else
           puts_message("Downloading bundletool (#{version}) from https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar...")
           download_and_write_bundletool("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar")
         end
-
+        puts_success('Downloaded bundletool')
       rescue OpenURI::HTTPError => e
         clean_temp!
-        puts_error!("Something went wrong when downloading bundletool" + defined? download_url ? "from #{download_url}" : "version #{version}" + ". \nError message\n #{e.message}")
-        false
-        puts_success('Downloaded bundletool')
-      end
+        puts_error!("Something went wrong when downloading bundletool version #{version}" + ". \nError message\n #{e.message}")
+        false        
+      end      
 
       def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info)
         aab_absolute_path = Pathname.new(File.expand_path(aab_path)).to_s
