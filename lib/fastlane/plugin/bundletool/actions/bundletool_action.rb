@@ -19,7 +19,7 @@ module Fastlane
           keystore_info[:alias_password] = params[:ks_key_alias_password]
         end
 
-        bundletool_version = params[:version]
+        bundletool_version = params[:bundletool_version]
         download_url = params[:download_url]
         aab_path = params[:aab_path]
         output_path = params[:apk_output_path] || '.'
@@ -44,23 +44,18 @@ module Fastlane
         Dir.mkdir "#{@project_root}/bundletool_temp"
 
         if defined?(download_url)
-
           puts_message("Downloading bundletool from #{download_url}")
-
-          URI.open(downloadUrl, &method(:saveBundleTool))
-
+          download_and_write_bundletool(download_url)
         else
           puts_message("Downloading bundletool (#{version}) from https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar...")
-
-          URI.open("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar", &method(:saveBundleTool))
-
+          download_and_write_bundletool("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar")
         end
 
-        puts_success('Downloaded bundletool')
       rescue OpenURI::HTTPError => e
         clean_temp!
         puts_error!("Something went wrong when downloading bundletool" + defined? download_url ? "from #{download_url}" : "version #{version}" + ". \nError message\n #{e.message}")
         false
+        puts_success('Downloaded bundletool')
       end
 
       def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info)
@@ -217,9 +212,11 @@ module Fastlane
 
       private
 
-      def self.saveBundleTool(bundletool)
-        File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
-          file.write(bundletool.read)
+      def self.download_and_write_bundletool(download_url)
+        URI.open(download_url) do |bundletool|
+          File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
+            file.write(bundletool.read)
+          end
         end
       end
     end
