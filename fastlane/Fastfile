@@ -1,7 +1,7 @@
 lane :bundletool_test do
   bundletool(
     verbose: true,
-    bundletool_version: '0.11.0',
+    bundletool_version: '1.10.0',
     aab_path: 'resources/example.aab',
     apk_output_path: "resources/bundletool_temp/universal_apk/myapk.apk"
   )
