@@ -38,12 +38,14 @@ module Fastlane
           return false
         end
         puts_success('Checking if .aab file exists')
+        return true
       end
 
       def self.download_bundletool(version, download_url)
         Dir.mkdir "#{@project_root}/bundletool_temp"
 
         unless download_url.nil?          
+          puts "Downloading bundletool from #{download_url}"
           puts_message("Downloading bundletool from #{download_url}")
           download_and_write_bundletool(download_url)
         else
@@ -51,10 +53,11 @@ module Fastlane
           download_and_write_bundletool("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar")
         end
         puts_success('Downloaded bundletool')
+        true
       rescue OpenURI::HTTPError => e
         clean_temp!
         puts_error!("Something went wrong when downloading bundletool version #{version}" + ". \nError message\n #{e.message}")
-        false        
+        false
       end      
 
       def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info)
