@@ -3,6 +3,17 @@ lane :bundletool_test do
     verbose: true,
     bundletool_version: '1.10.0',
     aab_path: 'resources/example.aab',
-    apk_output_path: "resources/bundletool_temp/universal_apk/myapk.apk"
+    apk_output_path: "resources/bundletool_temp/universal_apk/myapk.apk",
+    cache_path: './.cache'
+  )
+end
+
+lane :bundletool_test_url do
+  bundletool(
+    verbose: true,
+    download_url: 'https://github.com/google/bundletool/releases/download/1.10.0/bundletool-all-1.10.0.jar',
+    aab_path: 'resources/example.aab',
+    apk_output_path: "resources/bundletool_temp/universal_apk/myapk.apk",
+    cache_path: './.cache'
   )
 end

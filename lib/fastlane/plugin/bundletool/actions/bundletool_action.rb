@@ -23,12 +23,33 @@ module Fastlane
         download_url = params[:download_url]
         aab_path = params[:aab_path]
         output_path = params[:apk_output_path] || '.'
+        cache_path = params[:cache_path]
 
         return unless validate_aab!(aab_path)
 
-        return unless download_bundletool(bundletool_version, download_url)
+        if(cache_path.nil?)
+          installation_path = @bundletool_temp_path
+        else
+          installation_path = Pathname.new(File.expand_path(cache_path)).to_s          
+        end
 
-        extract_universal_apk_from(aab_path, output_path, keystore_info)
+        unless(Dir.exist?(installation_path))
+          Dir.mkdir(installation_path)
+        end
+
+        unless(Dir.exist?(@bundletool_temp_path))
+          Dir.mkdir(@bundletool_temp_path)
+        end
+
+        unless download_url.nil?
+          bundletool_filename = "bundletool_#{id = Digest::SHA256.hexdigest(download_url)}.jar"
+        else
+          bundletool_filename = "bundletool_#{bundletool_version}.jar"
+        end
+
+        return unless download_bundletool(bundletool_version, download_url, bundletool_filename, installation_path)
+
+        extract_universal_apk_from(aab_path, output_path, keystore_info, bundletool_filename, installation_path)
       end
 
       def self.validate_aab!(aab_path)
@@ -41,29 +62,24 @@ module Fastlane
         return true
       end
 
-      def self.download_bundletool(version, download_url)
-        Dir.mkdir "#{@project_root}/bundletool_temp"
-
+      def self.download_bundletool(version, download_url, bundletool_filename, cache_path)              
         unless download_url.nil?          
-          puts "Downloading bundletool from #{download_url}"
-          puts_message("Downloading bundletool from #{download_url}")
-          download_and_write_bundletool(download_url)
+          download_and_write_bundletool(download_url, bundletool_filename, cache_path)
         else
-          puts_message("Downloading bundletool (#{version}) from https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar...")
-          download_and_write_bundletool("https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar")
-        end
-        puts_success('Downloaded bundletool')
-        true
+          bundletool_url = "https://github.com/google/bundletool/releases/download/#{version}/bundletool-all-#{version}.jar"
+          download_and_write_bundletool(bundletool_url, bundletool_filename, cache_path)
+        end        
+        return true
       rescue OpenURI::HTTPError => e
         clean_temp!
         puts_error!("Something went wrong when downloading bundletool version #{version}" + ". \nError message\n #{e.message}")
-        false
+        return false
       end      
 
-      def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info)
+      def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info, bundletool_filename, installation_path)
         aab_absolute_path = Pathname.new(File.expand_path(aab_path)).to_s
         apk_output_absolute_path = Pathname.new(File.expand_path(apk_output_path)).to_s
-        output_path = run_bundletool!(aab_absolute_path, keystore_info)
+        output_path = run_bundletool!(aab_absolute_path, keystore_info, bundletool_filename, installation_path)
         prepare_apk!(output_path, apk_output_absolute_path)
       rescue StandardError => e
         puts_error!("Bundletool could not extract universal apk from aab at #{aab_absolute_path}. \nError message\n #{e.message}")
@@ -71,7 +87,7 @@ module Fastlane
         clean_temp!
       end
 
-      def self.run_bundletool!(aab_path, keystore_info)
+      def self.run_bundletool!(aab_path, keystore_info, bundletool_filename, installation_path)
         puts_message("Extracting apk from #{aab_path}...")
         output_path = "#{@bundletool_temp_path}/output.apks"
         keystore_params = ''
@@ -80,7 +96,7 @@ module Fastlane
           keystore_params = "--ks='#{keystore_info[:keystore_path]}' --ks-pass='pass:#{keystore_info[:keystore_password]}' --ks-key-alias='#{keystore_info[:alias]}' --key-pass='pass:#{keystore_info[:alias_password]}'"
         end
 
-        cmd = "java -jar #{@bundletool_temp_path}/bundletool.jar build-apks --bundle=\"#{aab_path}\" --output=\"#{output_path}\" --mode=universal #{keystore_params}"
+        cmd = "java -jar #{installation_path}/#{bundletool_filename} build-apks --bundle=\"#{aab_path}\" --output=\"#{output_path}\" --mode=universal #{keystore_params}"
 
         Open3.popen3(cmd) do |_, _, stderr, wait_thr|
           exit_status = wait_thr.value
@@ -184,7 +200,11 @@ module Fastlane
                                        is_string: false,
                                        type: Boolean,
                                        optional: true,
-                                       default_value: false)
+                                       default_value: false),
+            FastlaneCore::ConfigItem.new(key: :cache_path,
+                                       description: 'Cache downloaded bundletool binary into the cache path specified',
+                                       is_string: true,                                       
+                                       optional: true)
 
         ]
       end
@@ -214,12 +234,21 @@ module Fastlane
 
       private
 
-      def self.download_and_write_bundletool(download_url)
+      def self.download_and_write_bundletool(download_url, bundletool_filename, installation_path)
+        if(File.exist?"#{installation_path}/#{bundletool_filename}")
+          puts_message("Using binary cached at #{installation_path}/#{bundletool_filename}")
+          return
+        end
+        
+        puts_message("Downloading bundletool from #{download_url}")
+
         URI.open(download_url) do |bundletool|
-          File.open("#{@bundletool_temp_path}/bundletool.jar", 'wb') do |file|
+          File.open("#{installation_path}/#{bundletool_filename}", 'wb') do |file|
             file.write(bundletool.read)
           end
         end
+
+        puts_success('Downloaded bundletool')
       end
     end
   end
