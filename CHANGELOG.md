@@ -1,3 +1,9 @@
+## [1.0.8] - 2022-03-08
+- Added `cache_path` option to be able to cache bundletool binary. If `version` is used it will save the binary as bundletool_VERSION.jar and if you use `download_url` it will save it as bundletool_SHA_BASE_ON_URL.jar
+
+## [1.0.7] - 2022-02-16
+- Fix error when `verbose` is set to false.
+
 ## [1.0.6] - 2022-03-29
 - Adding a `download_url` option to point to a specific bundletool url. Thanks to @alienwizard
 
