@@ -1,3 +1,6 @@
+## [Unreleased] - 2023-04-21
+- Added `env_name` to input parameters to be able to read variables from dotenv
+
 ## [1.0.8] - 2022-03-08
 - Added `cache_path` option to be able to cache bundletool binary. If `version` is used it will save the binary as bundletool_VERSION.jar and if you use `download_url` it will save it as bundletool_SHA_BASE_ON_URL.jar
 
