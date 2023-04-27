@@ -158,12 +158,12 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :ks_path,
-                                       env_name: 'FL_BUNDLETOOL_STORE_FILE',
+                                       env_name: 'FL_BUNDLETOOL_KEYSTORE_FILE',
                                        description: 'Path to .jks file',
                                        is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :ks_password,
-                                       env_name: 'FL_BUNDLETOOL_STORE_PASSWORD',
+                                       env_name: 'FL_BUNDLETOOL_KEYSTORE_PASSWORD',
                                        description: '.jks password',
                                        is_string: true,
                                        optional: true),
