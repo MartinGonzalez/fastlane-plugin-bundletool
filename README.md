@@ -44,6 +44,24 @@ bundletool(
 
 This will output the universal `.apk` in the output path you set.
 
+## Options
+
+| Key                   | Description                                             | Env Var(s)                      | Default |
+|-----------------------|---------------------------------------------------------|---------------------------------|---------|
+| ks_path               | Path to .jks file                                       | FL_BUNDLETOOL_KEYSTORE_FILE     |         |
+| ks_password           | .jks password                                           | FL_BUNDLETOOL_KEYSTORE_PASSWORD |         |
+| ks_key_alias          | Alias for jks                                           | FL_BUNDLETOOL_KEY_ALIAS         |         |
+| ks_key_alias_password | Alias password for .jks                                 | FL_BUNDLETOOL_KEY_PASSWORD      |         |
+| bundletool_version    | Version of bundletool to use, by default 0.11.0 will    | FL_BUNDLETOOL_VERSION           | 0.11.0  |
+|                       | be used                                                 |                                 |         |
+| download_url          | Url to download bundletool from, should point to a jar  | FL_BUNDLETOOL_DOWNLOAD_URL      |         |
+|                       | file                                                    |                                 |         |
+| aab_path              | Path where the aab file is                              | FL_BUNDLETOOL_AAB_PATH          |         |
+| apk_output_path       | Path where the apk file is going to be placed           | FL_BUNDLETOOL_APK_OUTPUT_PATH   | .       |
+| verbose               | Show every messages of the action                       | FL_BUNDLETOOL_VERBOSE           | false   |
+| cache_path            | Cache downloaded bundletool binary into the cache path  | FL_BUNDLETOOL_CACHE_PATH        |         |
+|-----------------------|---------------------------------------------------------|---------------------------------|---------|
+
 ## Use case
 
 Here you can find a post I did explaining why I have to create this action.
