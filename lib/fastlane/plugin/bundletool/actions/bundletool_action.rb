@@ -158,30 +158,37 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :ks_path,
+                                       env_name: 'FL_BUNDLETOOL_KEYSTORE_FILE',
                                        description: 'Path to .jks file',
                                        is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :ks_password,
+                                       env_name: 'FL_BUNDLETOOL_KEYSTORE_PASSWORD',
                                        description: '.jks password',
                                        is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :ks_key_alias,
+                                       env_name: 'FL_BUNDLETOOL_KEY_ALIAS',
                                        description: 'Alias for jks',
                                        is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :ks_key_alias_password,
+                                       env_name: 'FL_BUNDLETOOL_KEY_PASSWORD',
                                        description: 'Alias password for .jks',
                                        is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :bundletool_version,
+                                       env_name: 'FL_BUNDLETOOL_VERSION',
                                        description: 'Version of bundletool to use, by default 0.11.0 will be used',
                                        is_string: true,
                                        default_value: '0.11.0'),
           FastlaneCore::ConfigItem.new(key: :download_url,
+                                       env_name: 'FL_BUNDLETOOL_DOWNLOAD_URL',
                                        description: 'Url to download bundletool from, should point to a jar file',
                                        is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :aab_path,
+                                       env_name: 'FL_BUNDLETOOL_AAB_PATH',
                                        description: 'Path where the aab file is',
                                        is_string: true,
                                        optional: false,
@@ -191,21 +198,23 @@ module Fastlane
                                          end
                                        end),
           FastlaneCore::ConfigItem.new(key: :apk_output_path,
+                                       env_name: 'FL_BUNDLETOOL_APK_OUTPUT_PATH',
                                        description: 'Path where the apk file is going to be placed',
                                        is_string: true,
                                        optional: true,
                                        default_value: '.'),
           FastlaneCore::ConfigItem.new(key: :verbose,
+                                       env_name: 'FL_BUNDLETOOL_VERBOSE',
                                        description: 'Show every messages of the action',
                                        is_string: false,
                                        type: Boolean,
                                        optional: true,
                                        default_value: false),
-            FastlaneCore::ConfigItem.new(key: :cache_path,
+          FastlaneCore::ConfigItem.new(key: :cache_path,
+                                       env_name: 'FL_BUNDLETOOL_CACHE_PATH',
                                        description: 'Cache downloaded bundletool binary into the cache path specified',
-                                       is_string: true,                                       
+                                       is_string: true,
                                        optional: true)
-
         ]
       end
 
@@ -239,7 +248,7 @@ module Fastlane
           puts_message("Using binary cached at #{installation_path}/#{bundletool_filename}")
           return
         end
-        
+
         puts_message("Downloading bundletool from #{download_url}")
 
         URI.open(download_url) do |bundletool|
