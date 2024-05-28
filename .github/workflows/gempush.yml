@@ -19,7 +19,8 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.0
+
     - name: Install dependencies
       run: bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
     - name: Run tests
@@ -29,6 +30,7 @@ jobs:
       with:
         name: test-results
         path: test-results
+
   build:
     name: "Build and Publish Gem"
     needs: test
@@ -39,7 +41,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.0
     - name: Publish to RubyGems
       run: |
         mkdir -p ~/.gem
