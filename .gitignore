@@ -12,3 +12,4 @@ fastlane/README.md
 fastlane/report.xml
 coverage
 test-results
+.DS_Store
