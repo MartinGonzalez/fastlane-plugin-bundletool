@@ -49,4 +49,22 @@ describe 'BundletoolAction.run should' do
       expect(File.exists? path_with_spaces+'/example.apk').to eq(true)
     end
   end
+
+  it 'handles single quote key-alias passwords' do
+    expect {
+      Fastlane::Actions::BundletoolAction.run(verbose: true,
+                                              bundletool_version: '0.11.0',
+                                              aab_path: 'resources/example.aab',
+                                              apk_output_path: 'resources/example.apk',
+                                              ks_path: 'resources/android-invalid.keystore',
+                                              ks_password: "ab'9{8{7c",
+                                              ks_key_alias: 'testing',
+                                              ks_key_alias_password: "ab'9{8{7c"
+                                             )
+    }.to raise_error do |error|
+      expect(error.message).not_to include("Error: Flag --ks-key-alias is required when --ks is set")
+      expect(error.message).to include("Error: File 'resources/android-invalid.keystore' was not found")
+    end                              
+    expect(File.exists? 'resources/example.apk').to eq(true)
+    end
 end

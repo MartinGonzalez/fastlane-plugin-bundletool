@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rubocop-require_tools', '~> 0.1.2')
   spec.add_development_dependency('simplecov', '~> 0.12.0')
   spec.add_development_dependency('fastlane', '>= 2.137.0')
+  spec.add_development_dependency('shellwords', '~> 0.2.0')
 end
