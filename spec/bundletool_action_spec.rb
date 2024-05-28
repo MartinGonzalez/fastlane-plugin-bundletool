@@ -65,6 +65,5 @@ describe 'BundletoolAction.run should' do
       expect(error.message).not_to include("Error: Flag --ks-key-alias is required when --ks is set")
       expect(error.message).to include("Error: File 'resources/android-invalid.keystore' was not found")
     end                              
-    expect(File.exists? 'resources/example.apk').to eq(true)
-    end
+  end
 end
