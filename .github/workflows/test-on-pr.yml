@@ -1,4 +1,4 @@
-name: Test-Build-PR
+name: PR Validations
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ on:
       - develop
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
