@@ -1,4 +1,4 @@
-name: Lint Verification
+name: PR Validations
 
 on:
   pull_request:
@@ -10,6 +10,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    name: "Rubocop Lint"
     steps:
     - uses: actions/checkout@v2
     - uses: actions/cache@v1
