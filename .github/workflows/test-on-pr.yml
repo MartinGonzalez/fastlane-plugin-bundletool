@@ -32,7 +32,7 @@ jobs:
         path: test-results
 
   build:
-    name: "Build and Publish Gem"
+    name: "Build"
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -41,6 +41,6 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.0.0
-    - name: Publish to RubyGems
+    - name: Build Gem
       run: |
         gem build *.gemspec
