@@ -28,3 +28,15 @@ jobs:
       run: bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
     - name: Run tests
       run: bundle exec rubocop -l
+    
+    - name: Notify on failure
+      if: failure()
+      uses: actions/github-script@v3
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '🚨 Lint failed! Please check run `bundle exec rubocop -l` and fix the offences.'
+          })
