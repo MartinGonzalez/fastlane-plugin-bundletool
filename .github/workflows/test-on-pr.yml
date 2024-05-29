@@ -2,8 +2,13 @@ name: Test-Build-PR
 
 on:
   pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
     branches:
       - master
+      - develop
 
 jobs:
   test:
