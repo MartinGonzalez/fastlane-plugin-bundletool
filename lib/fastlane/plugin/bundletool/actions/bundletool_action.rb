@@ -43,7 +43,7 @@ module Fastlane
         end
 
         unless download_url.nil?
-          bundletool_filename = "bundletool_#{id = Digest::SHA256.hexdigest(download_url)}.jar"
+          bundletool_filename = "bundletool_#{Digest::SHA256.hexdigest(download_url)}.jar"
         else
           bundletool_filename = "bundletool_#{bundletool_version}.jar"
         end
@@ -245,7 +245,6 @@ module Fastlane
         [:android].include?(platform)
       end
 
-      private
 
       def self.download_and_write_bundletool(download_url, bundletool_filename, installation_path)
         if(File.exist?"#{installation_path}/#{bundletool_filename}")

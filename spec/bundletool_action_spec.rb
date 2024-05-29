@@ -46,7 +46,7 @@ describe 'BundletoolAction.run should' do
                                               aab_path: path_with_spaces+'/example.aab',
                                               apk_output_path: path_with_spaces+'/example.apk')
                                               
-      expect(File.exists? path_with_spaces+'/example.apk').to eq(true)
+      expect(File.exist? path_with_spaces+'/example.apk').to eq(true)
     end
   end
 
@@ -60,6 +60,6 @@ describe 'BundletoolAction.run should' do
                                               ks_key_alias: 'my_alias',
                                               ks_key_alias_password: "ab'9{8{7c")
 
-      expect(File.exists? 'resources/example.apk').to eq(true)
+      expect(File.exist? 'resources/example.apk').to eq(true)
   end
 end
