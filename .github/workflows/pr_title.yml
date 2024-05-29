@@ -2,6 +2,8 @@ name: "PR Title Validation"
 
 on:
   pull_request_target:
+    branches:
+      - master
     types:
       - opened
       - edited
