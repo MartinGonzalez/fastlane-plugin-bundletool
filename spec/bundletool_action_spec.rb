@@ -60,6 +60,6 @@ describe 'BundletoolAction.run should' do
                                               ks_key_alias: 'my_alias',
                                               ks_key_alias_password: "ab'9{8{7c")
 
-      expect(File.exist? 'resources/example.apk').to eq(true)
+      expect(File.exists? 'resources/example.apk').to eq(true)
   end
 end
