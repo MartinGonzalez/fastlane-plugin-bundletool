@@ -31,7 +31,7 @@ jobs:
     
     - name: Notify on failure
       if: failure()
-      uses: actions/github-script@v3
+      uses: actions/github-script@v6
       with:
         script: |
           github.rest.issues.createComment({
