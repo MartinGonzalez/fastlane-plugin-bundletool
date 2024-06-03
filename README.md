@@ -1,6 +1,6 @@
 # Bundletool for Fastlane
 
-[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-bundletool)
+[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-bundletool) ![Gem Version](https://badge.fury.io/rb/fastlane-plugin-bundletool.svg) ![](https://ruby-gem-downloads-badge.herokuapp.com/fastlane-plugin-bundletool) [![YourActionName Actions Status](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/workflows/Release/badge.svg)](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/actions) ![Gem Total Downloads](https://img.shields.io/gem/dtv/fastlane-plugin-bundletool)
 
 ## Getting Started
 
