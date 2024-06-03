@@ -1,3 +1,6 @@
+## [1.0.10] - 2024-05-28
+- Handle special characters by @christianEconify in #17
+
 ## [1.0.9] - 2023-04-27
 - Added `env_name` to input parameters to be able to read variables from dotenv. Thanks to @txuslee
 

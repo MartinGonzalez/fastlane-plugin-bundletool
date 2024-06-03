@@ -1,0 +1,45 @@
+name: Develop Workflow
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+## Lint Verification
+  lint:
+    name: "Rubocop Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ./.github/actions/setup-ruby
+      
+      - name: Run Rubocop
+        run: bundle exec rubocop -l
+
+## Testing
+  test:
+    runs-on: ubuntu-latest
+    name: "Tests"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Running Tests
+        uses: ./.github/actions/tests
+
+## Building  
+  build:
+    runs-on: ubuntu-latest
+    name: "Build Gem"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ./.github/actions/setup-ruby
+      
+      - name: Build Gem
+        run: |
+          gem build *.gemspec
+
+  

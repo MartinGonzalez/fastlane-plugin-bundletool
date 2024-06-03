@@ -1,0 +1,61 @@
+name: PR Validations
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - develop
+
+jobs:
+## Lint Verification
+  lint:
+    name: "Rubocop Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ./.github/actions/setup-ruby
+      
+      - name: Run Rubocop
+        run: bundle exec rubocop -l
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚨 Lint failed! Please run `bundle exec rubocop -l` on your machine and fix the offences.'
+            })
+
+## Testing
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Running Tests
+        uses: ./.github/actions/tests
+
+## Building  
+  build:
+    runs-on: ubuntu-latest
+    name: "Build Gem"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ./.github/actions/setup-ruby
+      
+      - name: Build Gem
+        run: |
+          gem build *.gemspec
+
+  

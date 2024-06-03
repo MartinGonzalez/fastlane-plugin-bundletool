@@ -1,29 +1,35 @@
-name: "PR Title Validation"
+name: "PR Validations"
 
 on:
-  pull_request_target:
-    branches:
-      - master
+  pull_request:
     types:
       - opened
       - edited
       - synchronize
-
-permissions:
-  pull-requests: read
+    branches:
+      - develop
 
 jobs:
   main:
     name: Validate PR title
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@v5
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Validate PR title
+        uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v6
         with:
-          # If the PR only contains a single commit, the action will validate that
-          # it matches the configured pattern.
-          validateSingleCommit: true
-          # Related to `validateSingleCommit` you can opt-in to validate that the PR
-          # title matches a single commit to avoid confusion.
-          validateSingleCommitMatchesPrTitle: true
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚨 Invalid Pull Request Title!\n\nBut don't worry, you need to follow semantic release PR title.\n\nIf you are fixing something use \`fix: here your message\`\nIf you are adding new behaviour use \`feat: here your message\`.`
+            })

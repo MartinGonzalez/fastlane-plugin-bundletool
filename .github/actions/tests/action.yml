@@ -1,0 +1,18 @@
+name: "Test Action"
+description: "Runs tests and uploads artifacts"
+inputs: {}
+runs:
+  using: "composite"
+  steps:    
+    - name: Set up Ruby
+      uses: ./.github/actions/setup-ruby
+
+    - name: Run tests
+      run: bundle exec rake
+      shell: bash
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: ./test-results/rspec/rspec.xml

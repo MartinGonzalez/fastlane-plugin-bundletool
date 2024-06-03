@@ -1,0 +1,42 @@
+name: Build-Deploy
+description: "Build and deploy the gem"
+inputs:
+  GITHUB_TOKEN:
+    description: "GitHub Token"
+    required: true
+  GEM_HOST_API_KEY:
+    description: "RubyGems API Key"
+    required: true
+runs:
+  using: "composite"
+  steps:
+  - name: Set up Ruby
+    uses: ./.github/actions/setup-ruby
+    
+  ## Node Setup
+  - uses: actions/setup-node@v2
+    with:
+      node-version: "20.x"
+
+  ## Install dependencies
+  - name: Install Semantic Release
+    shell: bash
+    run: |
+      npm install -g semantic-release@23.0.8
+      npm install -g @semantic-release/changelog@6.0.3
+      npm install -g @semantic-release/git@10.0.1
+      npm install -g @semantic-release/error@4.0.0
+      npm install -g @semantic-release/exec@6.0.3
+      npm install -g @semantic-release/github@10.0.3
+      npm install -g @semantic-release/release-notes-generator@13.0.0
+      npm install -g semantic-release-rubygem@1.2.0
+      npm install -g @droidsolutions-oss/semantic-release-update-file@1.4.0        
+
+  ## Deploy
+  - name: Release
+    shell: bash
+    env:
+      GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+      GEM_HOST_API_KEY: ${{ inputs.GEM_HOST_API_KEY }}
+    run: |
+      semantic-release
