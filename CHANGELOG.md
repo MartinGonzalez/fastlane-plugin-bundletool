@@ -1,3 +1,10 @@
+## [1.0.11](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.0.10...v1.0.11) (2024-07-23)
+
+
+### Bug Fixes
+
+* multiline string cmd for prepare_apk ([#23](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/issues/23)) ([ceb9fe1](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/commit/ceb9fe1d104eaf2d3dc97cb14a2be811240e9f6d))
+
 ## [1.0.10] - 2024-05-28
 - Handle special characters by @christianEconify in #17
 
