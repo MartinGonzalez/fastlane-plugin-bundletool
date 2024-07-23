@@ -120,9 +120,11 @@ module Fastlane
           puts_important("Creating path #{target_dir_name} since does not exist")
           FileUtils.mkdir_p target_dir_name
         end
-        cmd = "mv \"#{output_path}\" \"#{@bundletool_temp_path}/output.zip\" &&
-        unzip \"#{@bundletool_temp_path}/output.zip\" -d \"#{@bundletool_temp_path}\" &&
-        mv \"#{@bundletool_temp_path}/universal.apk\" \"#{target_path}\""
+
+        cmd = "mv \"#{output_path}\" \"#{@bundletool_temp_path}/output.zip\" &&"\
+              "unzip \"#{@bundletool_temp_path}/output.zip\" -d \"#{@bundletool_temp_path}\" &&"\
+              "mv \"#{@bundletool_temp_path}/universal.apk\" \"#{target_path}\""
+
         Open3.popen3(cmd) do |_, _, stderr, wait_thr|
           exit_status = wait_thr.value
           raise stderr.read unless exit_status.success?
