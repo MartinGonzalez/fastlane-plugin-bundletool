@@ -1,3 +1,10 @@
+## [1.0.12](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.0.11...v1.0.12) (2024-10-07)
+
+
+### Bug Fixes
+
+* use single quotes in keystore path to handle paths containing spaces ([#24](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/issues/24)) ([c69bed6](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/commit/c69bed60a6adb0ee69b3ce5d01ba5b1cd459ab4b))
+
 ## [1.0.11](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.0.10...v1.0.11) (2024-07-23)
 
 
