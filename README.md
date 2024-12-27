@@ -22,7 +22,7 @@ gem 'fastlane-plugin-bundletool'
 
 https://developer.android.com/studio/command-line/bundletool
 
-The motivation of this plugin is to extract an universal `.apk` file from an [.aab](https://fileinfo.com/extension/aab) file. Since we cannot distribute aab files, it's great that we can extract from the very same binary a file that we can distribute internally.
+The motivation of this plugin is to extract an universal `.apk` or split `.apks` from an [.aab](https://fileinfo.com/extension/aab) file. Since we cannot distribute aab files, it's great that we can extract from the very same binary a file that we can distribute internally.
 
 ## Usage
 
@@ -38,7 +38,8 @@ bundletool(
   aab_path: aab_path,
   apk_output_path: apk_output_path,
   verbose: true,
-  cache_path: cache_path
+  cache_path: cache_path,
+  universal_apk: true
 )
 ```
 
@@ -60,6 +61,7 @@ This will output the universal `.apk` in the output path you set.
 | apk_output_path       | Path where the apk file is going to be placed           | FL_BUNDLETOOL_APK_OUTPUT_PATH   | .       |
 | verbose               | Show every messages of the action                       | FL_BUNDLETOOL_VERBOSE           | false   |
 | cache_path            | Cache downloaded bundletool binary into the cache path  | FL_BUNDLETOOL_CACHE_PATH        |         |
+| universal_apk         | Create universal APK (true) or split APKs (false)       | FL_BUNDLETOOL_UNIVERSAL_APK     | true    |
 |-----------------------|---------------------------------------------------------|---------------------------------|---------|
 
 ## Use case
