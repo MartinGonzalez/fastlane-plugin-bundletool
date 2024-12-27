@@ -51,7 +51,7 @@ module Fastlane
 
         return unless download_bundletool(bundletool_version, download_url, bundletool_filename, installation_path)
 
-        extract_universal_apk_from(aab_path, output_path, keystore_info, bundletool_filename, installation_path, universal_apk)
+        extract_apk_from(aab_path, output_path, keystore_info, bundletool_filename, installation_path, universal_apk)
       end
 
       def self.validate_aab!(aab_path)
@@ -78,7 +78,7 @@ module Fastlane
         return false
       end      
 
-      def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info, bundletool_filename, installation_path, universal_apk)
+      def self.extract_apk_from(aab_path, apk_output_path, keystore_info, bundletool_filename, installation_path, universal_apk)
         aab_absolute_path = Pathname.new(File.expand_path(aab_path)).to_s
         apk_output_absolute_path = Pathname.new(File.expand_path(apk_output_path)).to_s
         output_path = run_bundletool!(aab_absolute_path, keystore_info, bundletool_filename, installation_path, universal_apk)
