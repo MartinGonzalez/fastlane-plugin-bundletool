@@ -25,6 +25,7 @@ module Fastlane
         aab_path = params[:aab_path]
         output_path = params[:apk_output_path] || '.'
         cache_path = params[:cache_path]
+        universal_apk = params[:universal_apk]
 
         return unless validate_aab!(aab_path)
 
@@ -50,7 +51,7 @@ module Fastlane
 
         return unless download_bundletool(bundletool_version, download_url, bundletool_filename, installation_path)
 
-        extract_universal_apk_from(aab_path, output_path, keystore_info, bundletool_filename, installation_path)
+        extract_apk_from(aab_path, output_path, keystore_info, bundletool_filename, installation_path, universal_apk)
       end
 
       def self.validate_aab!(aab_path)
@@ -77,18 +78,18 @@ module Fastlane
         return false
       end      
 
-      def self.extract_universal_apk_from(aab_path, apk_output_path, keystore_info, bundletool_filename, installation_path)
+      def self.extract_apk_from(aab_path, apk_output_path, keystore_info, bundletool_filename, installation_path, universal_apk)
         aab_absolute_path = Pathname.new(File.expand_path(aab_path)).to_s
         apk_output_absolute_path = Pathname.new(File.expand_path(apk_output_path)).to_s
-        output_path = run_bundletool!(aab_absolute_path, keystore_info, bundletool_filename, installation_path)
-        prepare_apk!(output_path, apk_output_absolute_path)
+        output_path = run_bundletool!(aab_absolute_path, keystore_info, bundletool_filename, installation_path, universal_apk)
+        prepare_apk!(output_path, apk_output_absolute_path, universal_apk)
       rescue StandardError => e
         puts_error!("Bundletool could not extract universal apk from aab at #{aab_absolute_path}. \nError message\n #{e.message}")
       ensure
         clean_temp!
       end
 
-      def self.run_bundletool!(aab_path, keystore_info, bundletool_filename, installation_path)
+      def self.run_bundletool!(aab_path, keystore_info, bundletool_filename, installation_path, universal_apk)
         puts_message("Extracting apk from #{aab_path}...")
         output_path = "#{@bundletool_temp_path}/output.apks"
         keystore_params = ''
@@ -100,7 +101,9 @@ module Fastlane
           keystore_params = "--ks='#{keystore_info[:keystore_path]}' --ks-pass=#{key_store_password} --ks-key-alias=#{key_alias} --key-pass=#{key_alias_password}"
         end
 
-        cmd = "java -jar #{installation_path}/#{bundletool_filename} build-apks --bundle=\"#{aab_path}\" --output=\"#{output_path}\" --mode=universal #{keystore_params}"
+        universal_apk_param = universal_apk == true ? "--mode=universal" : ""
+
+        cmd = "java -jar #{installation_path}/#{bundletool_filename} build-apks --bundle=\"#{aab_path}\" --output=\"#{output_path}\" #{universal_apk_param} #{keystore_params}"
 
         Open3.popen3(cmd) do |_, _, stderr, wait_thr|
           exit_status = wait_thr.value
@@ -110,7 +113,7 @@ module Fastlane
         output_path
       end
 
-      def self.prepare_apk!(output_path, target_path)
+      def self.prepare_apk!(output_path, target_path, universal_apk)
         puts_message("Preparing apk to #{target_path}...")
         if File.file?(target_path)
           puts_important("Apk at path #{target_path} exists. Replacing it.")
@@ -121,9 +124,14 @@ module Fastlane
           FileUtils.mkdir_p target_dir_name
         end
 
-        cmd = "mv \"#{output_path}\" \"#{@bundletool_temp_path}/output.zip\" &&"\
-              "unzip \"#{@bundletool_temp_path}/output.zip\" -d \"#{@bundletool_temp_path}\" &&"\
-              "mv \"#{@bundletool_temp_path}/universal.apk\" \"#{target_path}\""
+        cmd = ''
+        if universal_apk == true
+          cmd = "mv \"#{output_path}\" \"#{@bundletool_temp_path}/output.zip\" &&"\
+          "unzip \"#{@bundletool_temp_path}/output.zip\" -d \"#{@bundletool_temp_path}\" &&"\
+          "mv \"#{@bundletool_temp_path}/universal.apk\" \"#{target_path}\""
+        else
+          cmd = "mv \"#{output_path}\" \"#{target_path}\""
+        end
 
         Open3.popen3(cmd) do |_, _, stderr, wait_thr|
           exit_status = wait_thr.value
@@ -220,7 +228,14 @@ module Fastlane
                                        env_name: 'FL_BUNDLETOOL_CACHE_PATH',
                                        description: 'Cache downloaded bundletool binary into the cache path specified',
                                        is_string: true,
-                                       optional: true)
+                                       optional: true),
+          FastlaneCore::ConfigItem.new(key: :universal_apk,
+                                       env_name: 'FL_BUNDLETOOL_UNIVERSAL_APK',
+                                       description: 'Create universal APK (true) or split APKs (false)',
+                                       is_string: false,
+                                       type: Boolean,
+                                       optional: true,
+                                       default_value: true)
         ]
       end
 
