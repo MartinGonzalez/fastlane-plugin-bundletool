@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.0.12...v1.1.0) (2025-01-02)
+
+
+### Features
+
+* make --mode=universal configurable ([#26](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/issues/26)) ([7f3fc3e](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/commit/7f3fc3edf20d65b70c3cf2c20a5ee5fa5f45016a))
+
 ## [1.0.12](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.0.11...v1.0.12) (2024-10-07)
 
 
