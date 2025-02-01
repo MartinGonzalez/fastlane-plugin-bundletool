@@ -98,7 +98,7 @@ module Fastlane
           key_alias_password = Shellwords.shellescape("pass:#{keystore_info[:alias_password]}")
           key_store_password = Shellwords.shellescape("pass:#{keystore_info[:keystore_password]}")
           key_alias = Shellwords.shellescape(keystore_info[:alias])
-          keystore_params = "--ks='#{keystore_info[:keystore_path]}' --ks-pass=#{key_store_password} --ks-key-alias=#{key_alias} --key-pass=#{key_alias_password}"
+          keystore_params = "--ks=\"#{keystore_info[:keystore_path]}\" --ks-pass=#{key_store_password} --ks-key-alias=#{key_alias} --key-pass=#{key_alias_password}"
         end
 
         universal_apk_param = universal_apk == true ? "--mode=universal" : ""
