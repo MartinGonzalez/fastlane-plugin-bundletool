@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.1.0...v1.1.1) (2025-02-01)
+
+
+### Bug Fixes
+
+* Wrap keystore_path between quotes ([#28](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/issues/28)) ([ff991d6](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/commit/ff991d6ad156674647b78adfe264ad29cee296a0))
+
 # [1.1.0](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.0.12...v1.1.0) (2025-01-02)
 
 
