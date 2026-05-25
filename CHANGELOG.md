@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.1.1...v1.1.2) (2026-05-25)
+
+
+### Bug Fixes
+
+* fall back to GRADLE_AAB_OUTPUT_PATH lane_context ([#30](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/issues/30)) ([d62c0f3](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/commit/d62c0f3d257bf26641f2a1c534ef7323f8f1b542))
+
 ## [1.1.1](https://github.com/MartinGonzalez/fastlane-plugin-bundletool/compare/v1.1.0...v1.1.1) (2025-02-01)
 
 
