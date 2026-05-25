@@ -50,7 +50,7 @@ describe 'BundletoolAction.run should' do
     end
   end
 
-  it 'handles single quote key-alias passwords' do  
+  it 'handles single quote key-alias passwords' do
       Fastlane::Actions::BundletoolAction.run(verbose: true,
                                               bundletool_version: '0.11.0',
                                               aab_path: 'resources/example.aab',
@@ -61,5 +61,57 @@ describe 'BundletoolAction.run should' do
                                               ks_key_alias_password: "ab'9{8{7c")
 
       expect(File.exist? 'resources/example.apk').to eq(true)
+  end
+
+  context 'aab_path fallback to lane_context' do
+    before do
+      Fastlane::Actions.lane_context.delete(Fastlane::Actions::SharedValues::GRADLE_AAB_OUTPUT_PATH)
+    end
+
+    after do
+      Fastlane::Actions.lane_context.delete(Fastlane::Actions::SharedValues::GRADLE_AAB_OUTPUT_PATH)
+    end
+
+    it 'falls back to GRADLE_AAB_OUTPUT_PATH lane_context when aab_path is not provided' do
+      lane_aab_path = 'lane/context/example.aab'
+      lane_aab_absolute_path = Pathname.new(File.expand_path(lane_aab_path)).to_s
+      Fastlane::Actions.lane_context[Fastlane::Actions::SharedValues::GRADLE_AAB_OUTPUT_PATH] = lane_aab_path
+
+      bundletool_url = 'https://github.com/google/bundletool/releases/download/0.11.0/bundletool-all-0.11.0.jar'
+      error = 'error'
+      allow(File).to receive(:file?).with(lane_aab_path).and_return(true)
+      allow(Kernel).to receive(:open).with(bundletool_url).and_return('somebody')
+      allow(Fastlane::Actions::BundletoolAction).to receive(:run_bundletool!).and_raise(StandardError.new(error))
+
+      expect(FastlaneCore::UI).to receive(:user_error!).with("Bundletool could not extract universal apk from aab at #{lane_aab_absolute_path}. \nError message\n #{error}")
+
+      Fastlane::Actions::BundletoolAction.run(verbose: true,
+                                              bundletool_version: '0.11.0')
+    end
+
+    it 'prefers explicit aab_path over GRADLE_AAB_OUTPUT_PATH lane_context' do
+      explicit_aab_path = 'explicit/example.aab'
+      explicit_absolute_path = Pathname.new(File.expand_path(explicit_aab_path)).to_s
+      Fastlane::Actions.lane_context[Fastlane::Actions::SharedValues::GRADLE_AAB_OUTPUT_PATH] = 'lane/context/example.aab'
+
+      bundletool_url = 'https://github.com/google/bundletool/releases/download/0.11.0/bundletool-all-0.11.0.jar'
+      error = 'error'
+      allow(File).to receive(:file?).with(explicit_aab_path).and_return(true)
+      allow(Kernel).to receive(:open).with(bundletool_url).and_return('somebody')
+      allow(Fastlane::Actions::BundletoolAction).to receive(:run_bundletool!).and_raise(StandardError.new(error))
+
+      expect(FastlaneCore::UI).to receive(:user_error!).with("Bundletool could not extract universal apk from aab at #{explicit_absolute_path}. \nError message\n #{error}")
+
+      Fastlane::Actions::BundletoolAction.run(verbose: true,
+                                              bundletool_version: '0.11.0',
+                                              aab_path: explicit_aab_path)
+    end
+
+    it 'errors when neither aab_path nor GRADLE_AAB_OUTPUT_PATH lane_context is set' do
+      expect(FastlaneCore::UI).to receive(:user_error!).with('You must set aab_path or have GRADLE_AAB_OUTPUT_PATH set in lane_context.')
+
+      Fastlane::Actions::BundletoolAction.run(verbose: true,
+                                              bundletool_version: '0.11.0')
+    end
   end
 end
