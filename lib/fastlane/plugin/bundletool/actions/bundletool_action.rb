@@ -22,10 +22,15 @@ module Fastlane
 
         bundletool_version = params[:bundletool_version]
         download_url = params[:download_url]
-        aab_path = params[:aab_path]
+        aab_path = params[:aab_path] || Actions.lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
         output_path = params[:apk_output_path] || '.'
         cache_path = params[:cache_path]
         universal_apk = params[:universal_apk]
+
+        if aab_path.nil? || aab_path.empty?
+          puts_error!('You must set aab_path or have GRADLE_AAB_OUTPUT_PATH set in lane_context.')
+          return
+        end
 
         return unless validate_aab!(aab_path)
 
@@ -203,14 +208,9 @@ module Fastlane
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :aab_path,
                                        env_name: 'FL_BUNDLETOOL_AAB_PATH',
-                                       description: 'Path where the aab file is',
+                                       description: 'Path where the aab file is. Falls back to lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH] when not provided',
                                        is_string: true,
-                                       optional: false,
-                                       verify_block: proc do |value|
-                                         unless value && !value.empty?
-                                           UI.user_error!('You must set aab_path.')
-                                         end
-                                       end),
+                                       optional: true),
           FastlaneCore::ConfigItem.new(key: :apk_output_path,
                                        env_name: 'FL_BUNDLETOOL_APK_OUTPUT_PATH',
                                        description: 'Path where the apk file is going to be placed',
